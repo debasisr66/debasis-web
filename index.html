@@ -1,0 +1,877 @@
+<title>Debasis Ray</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Cormorant:ital,wght@0,600;1,500&display=swap">
+
+<style>
+/* ─── Tokens ── left-nav + content, timeline spine, minimal palette ─── */
+:root {
+  --bg:         #FAFAF8;
+  --surface:    #FFFFFF;
+  --fg:         #111110;
+  --fg2:        #52524F;
+  --fg3:        #8A8A86;
+  --accent:     #1250B4;
+  --rule:       #E5E4DF;
+  --hi:         #F2F2EE;
+  --spine:      #D8D8D2;
+  --dot:        #1250B4;
+  --dot-old:    #C8C8C2;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:         #111110;
+    --surface:    #1A1A18;
+    --fg:         #EAEAE8;
+    --fg2:        #A0A09C;
+    --fg3:        #606060;
+    --accent:     #5B8AE8;
+    --rule:       #272724;
+    --hi:         #1A1A18;
+    --spine:      #333330;
+    --dot:        #5B8AE8;
+    --dot-old:    #3A3A36;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:         #111110;
+  --surface:    #1A1A18;
+  --fg:         #EAEAE8;
+  --fg2:        #A0A09C;
+  --fg3:        #606060;
+  --accent:     #5B8AE8;
+  --rule:       #272724;
+  --hi:         #1A1A18;
+  --spine:      #333330;
+  --dot:        #5B8AE8;
+  --dot-old:    #3A3A36;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.7;
+  display: flex;
+  min-height: 100%;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Layout shell ─── */
+.shell {
+  display: flex;
+  width: 100%;
+  max-width: 1060px;
+  margin-inline: auto;
+  padding-inline: 0;
+  gap: 0;
+}
+
+/* ─── Left nav ─── */
+.sidenav {
+  width: 196px;
+  flex-shrink: 0;
+  padding: clamp(32px, 5vw, 56px) 24px clamp(32px, 5vw, 56px) clamp(16px, 4vw, 24px);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-right: 1px solid var(--rule);
+}
+
+.sidenav-name {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  margin-block-end: 4px;
+}
+.sidenav-role {
+  font-size: .72rem;
+  color: var(--fg3);
+  font-weight: 400;
+  line-height: 1.4;
+  margin-block-end: 28px;
+}
+
+.nav-group {
+  margin-block-end: 24px;
+}
+.nav-group-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--fg3);
+  margin-block-end: 8px;
+  padding-block-end: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.nav-links a {
+  display: block;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--fg2);
+  padding: 4px 0;
+  transition: color .15s;
+}
+.nav-links a:hover { color: var(--accent); text-decoration: none; }
+.nav-links a.active { color: var(--accent); font-weight: 600; }
+
+.sidenav-footer {
+  margin-top: auto;
+  padding-block-start: 20px;
+  border-top: 1px solid var(--rule);
+}
+.sidenav-footer a {
+  display: block;
+  font-size: .78rem;
+  color: var(--fg3);
+  padding-block: 3px;
+}
+.sidenav-footer a:hover { color: var(--accent); text-decoration: none; }
+
+.theme-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: .78rem;
+  color: var(--fg3);
+  font-family: inherit;
+  padding: 0;
+  margin-block-start: 4px;
+  text-align: left;
+}
+.theme-btn:hover { color: var(--accent); }
+
+/* ─── Main content ─── */
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(32px, 5vw, 56px) clamp(24px, 5vw, 56px);
+  max-width: 780px;
+}
+
+/* ─── Section ─── */
+section { margin-block-end: clamp(48px, 7vw, 72px); }
+
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--fg3);
+  padding-block-end: 12px;
+  border-bottom: 1px solid var(--rule);
+  margin-block-end: 24px;
+}
+
+/* ─── Profile header ─── */
+.profile-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-block-end: 20px;
+}
+.avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0D3F94, #1250B4 50%, #4D80E6);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant', Georgia, serif;
+  font-size: 1.7rem; font-weight: 600; color: #fff;
+  flex-shrink: 0;
+}
+.profile-name { font-size: 1.5rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-block-end: 3px; }
+.profile-title { font-size: .875rem; color: var(--fg2); }
+.profile-company { font-size: .82rem; color: var(--fg3); }
+
+.social-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  font-size: .82rem;
+  color: var(--fg3);
+  margin-block-end: 24px;
+  padding-block-end: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.social-row a { color: var(--fg2); font-weight: 500; }
+.social-row a:hover { color: var(--accent); text-decoration: none; }
+.sep { padding-inline: 8px; color: var(--rule); user-select: none; }
+
+.bio p {
+  font-size: .95rem;
+  color: var(--fg2);
+  line-height: 1.8;
+  max-width: 64ch;
+  margin-block-end: .9rem;
+}
+.bio p:last-child { margin-block-end: 0; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-block-start: 16px; }
+.tag { font-size: 11px; color: var(--fg3); background: var(--hi); border: 1px solid var(--rule); padding: 3px 10px; border-radius: 20px; }
+
+/* ─── Focus arrows ─── */
+.focus-list { display: flex; flex-direction: column; gap: 16px; }
+.focus-item { display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: flex-start; }
+.focus-arrow { color: var(--accent); font-size: .9rem; padding-top: 3px; }
+.focus-title { font-size: .9rem; font-weight: 600; color: var(--fg); margin-block-end: 2px; }
+.focus-desc { font-size: .845rem; color: var(--fg2); line-height: 1.6; }
+
+/* ─── Consulting ─── */
+.consult-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-block-start: 4px;
+}
+.consult-card {
+  background: var(--hi);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  padding: 16px 18px;
+}
+.consult-card h3 { font-size: .875rem; font-weight: 600; color: var(--fg); margin-block-end: 5px; }
+.consult-card p { font-size: .82rem; color: var(--fg2); line-height: 1.55; }
+
+.consult-cta {
+  margin-block-start: 20px;
+  padding: 16px 18px;
+  background: var(--hi);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  font-size: .875rem;
+  color: var(--fg2);
+  line-height: 1.6;
+}
+.consult-cta strong { color: var(--fg); font-weight: 600; }
+
+/* ─── Timeline ─── */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+/* vertical spine */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 0;
+  width: 1px;
+  background: var(--spine);
+}
+
+.tl-item {
+  position: relative;
+  margin-block-end: 32px;
+}
+.tl-item:last-child { margin-block-end: 0; }
+
+/* dot */
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--dot);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--dot);
+}
+.tl-item.dim::before {
+  background: var(--dot-old);
+  box-shadow: 0 0 0 1px var(--dot-old);
+}
+
+.tl-period {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--fg3);
+  letter-spacing: .03em;
+  margin-block-end: 2px;
+}
+.tl-role { font-size: .95rem; font-weight: 600; color: var(--fg); margin-block-end: 2px; line-height: 1.3; }
+.tl-company { font-size: .82rem; color: var(--accent); margin-block-end: 7px; font-weight: 500; }
+.tl-desc { font-size: .845rem; color: var(--fg2); line-height: 1.6; max-width: 58ch; }
+
+/* Earlier companies strip */
+.earlier-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block-start: 8px;
+}
+.co-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 7px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--fg2);
+  background: var(--hi);
+}
+.co-icon {
+  width: 26px; height: 26px;
+  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fg3);
+  letter-spacing: -.02em;
+  flex-shrink: 0;
+}
+
+/* ─── Reading timeline ─── */
+.reading-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+.reading-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 0;
+  width: 1px;
+  background: var(--spine);
+}
+
+.read-item {
+  position: relative;
+  margin-block-end: 24px;
+}
+.read-item:last-child { margin-block-end: 0; }
+.read-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.read-item.placeholder-dot::before {
+  background: var(--dot-old);
+  box-shadow: 0 0 0 1px var(--dot-old);
+  border-style: dashed;
+}
+
+.read-category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg3);
+  margin-block-end: 3px;
+}
+.read-title { font-size: .9rem; font-weight: 600; color: var(--fg); margin-block-end: 2px; line-height: 1.35; }
+.read-title a { color: var(--fg); }
+.read-title a:hover { color: var(--accent); text-decoration: none; }
+.read-desc { font-size: .82rem; color: var(--fg2); line-height: 1.55; max-width: 56ch; }
+.read-source { font-size: .78rem; color: var(--fg3); margin-block-end: 3px; }
+
+/* Provision card */
+.provision-card {
+  background: var(--hi);
+  border: 1px dashed var(--rule);
+  border-radius: 5px;
+  padding: 18px 20px;
+  font-size: .85rem;
+  color: var(--fg3);
+  line-height: 1.55;
+  margin-block-start: 24px;
+}
+.provision-card p { margin-block-end: 6px; }
+.provision-card code {
+  font-size: .78rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  padding: 2px 7px;
+  border-radius: 3px;
+  color: var(--fg2);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ─── Writing ─── */
+.writing-list { display: flex; flex-direction: column; }
+.writing-item {
+  padding-block: 13px;
+  border-bottom: 1px solid var(--rule);
+}
+.writing-item:last-child { border-bottom: none; }
+.writing-title { font-size: .9rem; font-weight: 600; color: var(--fg); margin-block-end: 3px; line-height: 1.35; }
+.writing-title a { color: var(--fg); }
+.writing-title a:hover { color: var(--accent); text-decoration: none; }
+.writing-meta { font-size: .78rem; color: var(--fg3); }
+
+/* ─── Credentials ─── */
+.cred-list { display: flex; flex-direction: column; }
+.cred-item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  padding-block: 10px;
+  border-bottom: 1px solid var(--rule);
+  font-size: .855rem;
+}
+.cred-item:last-child { border-bottom: none; }
+.cred-year { color: var(--fg3); font-weight: 500; font-size: .8rem; padding-top: 1px; }
+.cred-title { color: var(--fg); font-weight: 500; }
+.cred-issuer { font-size: .78rem; color: var(--fg3); margin-top: 1px; }
+
+/* ─── Contact ─── */
+.contact-text { font-size: .9rem; color: var(--fg2); max-width: 54ch; margin-block-end: 14px; line-height: 1.7; }
+.email-chip {
+  display: inline-block;
+  font-family: 'SF Mono','Fira Code',monospace;
+  font-size: .82rem;
+  color: var(--fg);
+  background: var(--hi);
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  border-radius: 3px;
+  user-select: all;
+  margin-block-end: 14px;
+}
+.contact-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: .875rem; }
+
+/* ─── Footer ─── */
+footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top: 1px solid var(--rule); }
+
+/* ─── Responsive ─── */
+@media (max-width: 680px) {
+  body { display: block; }
+  .shell { flex-direction: column; }
+  .sidenav {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    gap: 0;
+  }
+  .sidenav-name { font-size: .85rem; margin-block-end: 0; margin-right: 12px; }
+  .sidenav-role { display: none; }
+  .nav-group { margin-block-end: 0; margin-right: 20px; }
+  .nav-group-label { display: none; }
+  .nav-links { flex-direction: row; gap: 12px; }
+  .sidenav-footer { margin-top: 0; padding-block-start: 0; border-top: none; border-left: 1px solid var(--rule); padding-left: 20px; display: flex; align-items: center; gap: 10px; }
+  .content { padding: 20px 16px; }
+  .consult-grid { grid-template-columns: 1fr; }
+  .cred-item { grid-template-columns: 100px 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+
+<div class="shell">
+
+<!-- ── Left nav ── -->
+<nav class="sidenav" aria-label="Page navigation">
+  <div>
+    <div class="sidenav-name">Debasis Ray</div>
+    <div class="sidenav-role">EVP, Product Engineering<br>Cybage Software</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Profile</div>
+    <ul class="nav-links">
+      <li><a href="#profile">Summary</a></li>
+      <li><a href="#focus">Focus areas</a></li>
+      <li><a href="#consulting">Consulting</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Work</div>
+    <ul class="nav-links">
+      <li><a href="#career">Career</a></li>
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#credentials">Certifications</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Reads</div>
+    <ul class="nav-links">
+      <li><a href="#reading">Reading list</a></li>
+    </ul>
+  </div>
+
+  <div class="sidenav-footer">
+    <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:debasisr@cybage.com">Email</a>
+    <a href="https://www.cybage.com" target="_blank" rel="noopener">Cybage</a>
+    <button class="theme-btn" id="themeToggle">◑ theme</button>
+  </div>
+</nav>
+
+<!-- ── Content ── -->
+<main class="content">
+
+  <!-- Profile -->
+  <section id="profile">
+    <div class="profile-top">
+      <div class="avatar" aria-hidden="true">DR</div>
+      <div>
+        <div class="profile-name">Debasis Ray</div>
+        <div class="profile-title">EVP &amp; Head, Product Engineering Services</div>
+        <div class="profile-company">Cybage Software · Pune, India · 24 years</div>
+      </div>
+    </div>
+    <div class="social-row">
+      <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">LinkedIn</a>
+      <span class="sep">·</span>
+      <a href="https://www.cybage.com" target="_blank" rel="noopener">Cybage Software</a>
+      <span class="sep">·</span>
+      <span>debasisr@cybage.com</span>
+      <span class="sep">·</span>
+      <span>Pune, India</span>
+    </div>
+    <div class="bio">
+      <p>
+        I work with ISVs and technology companies to build, modernise, and scale software products — with engineering teams that ship outcomes, not just code. As EVP of Product Engineering Services at Cybage Software, I partner with technology-enabled enterprises across payments, energy, cybersecurity, and SaaS platforms to solve the hard problems: legacy modernisation that doesn't break what works, cloud architecture that actually reduces operational risk, and AI integration that improves engineering velocity without sacrificing quality or accountability.
+      </p>
+      <p>
+        Three decades in software engineering have taught me one thing clearly — technology alone doesn't create impact. What creates impact is the combination of strong product thinking, disciplined engineering, capable teams, and measurable execution. That's what I build.
+      </p>
+      <div class="tag-row">
+        <span class="tag">#AI</span>
+        <span class="tag">#DigitalTransformation</span>
+        <span class="tag">#AgenticAI</span>
+        <span class="tag">#AISDLC</span>
+        <span class="tag">#ResponsibleAI</span>
+        <span class="tag">#SoftwareEngineering</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Focus areas -->
+  <section id="focus">
+    <div class="sec-label">Focus areas</div>
+    <div class="focus-list">
+      <div class="focus-item">
+        <div class="focus-arrow">→</div>
+        <div>
+          <div class="focus-title">AI-native software delivery</div>
+          <div class="focus-desc">Embedding AI across the SDLC — requirements, architecture, code generation, test automation, release readiness — with human oversight and security guardrails. Not AI as a side experiment. AI as an engineering method.</div>
+        </div>
+      </div>
+      <div class="focus-item">
+        <div class="focus-arrow">→</div>
+        <div>
+          <div class="focus-title">Product modernisation and platform evolution</div>
+          <div class="focus-desc">Refactoring complex legacy systems, reducing technical debt, strengthening architecture. Most real-world engineering isn't greenfield — it's making what already exists better, faster, and more valuable.</div>
+        </div>
+      </div>
+      <div class="focus-item">
+        <div class="focus-arrow">→</div>
+        <div>
+          <div class="focus-title">Growth-driven engineering partnerships</div>
+          <div class="focus-desc">Working alongside CTOs, CPOs, and engineering leaders on technology transformation, value-stream improvement, and deployment resilience across payments, energy, cybersecurity, and SaaS.</div>
+        </div>
+      </div>
+      <div class="focus-item">
+        <div class="focus-arrow">→</div>
+        <div>
+          <div class="focus-title">Engineering culture at scale</div>
+          <div class="focus-desc">Building delivery organisations where teams own outcomes, not just features — through competency frameworks, structured hiring, and the PiE (Product in Engineering) methodology.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consulting -->
+  <section id="consulting">
+    <div class="sec-label">Advisory &amp; Consulting</div>
+    <div class="consult-grid">
+      <div class="consult-card">
+        <h3>Technology Strategy</h3>
+        <p>Architecture direction, platform evolution, and build-vs-buy decisions for technology leaders navigating modernisation or scaling challenges.</p>
+      </div>
+      <div class="consult-card">
+        <h3>AI-SDLC Adoption</h3>
+        <p>Practical roadmaps for embedding GenAI and agentic workflows into engineering delivery — with governance, security guardrails, and measurable outcomes.</p>
+      </div>
+      <div class="consult-card">
+        <h3>Engineering Org Design</h3>
+        <p>Team structure, capability frameworks, career ladders, and delivery operating models for ISVs and tech-enabled businesses scaling their engineering.</p>
+      </div>
+      <div class="consult-card">
+        <h3>CTO / CPO Advisory</h3>
+        <p>Thought-partner for technology executives — product-engineering alignment, technical due diligence, delivery health assessment, and strategic roadmap review.</p>
+      </div>
+    </div>
+    <div class="consult-cta">
+      <strong>Available for focused engagements.</strong> If you're a technology leader thinking about modernisation, engineering scale, or AI-augmented delivery and looking for an experienced practitioner — <a href="mailto:debasisr@cybage.com">reach out</a> or <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">connect on LinkedIn</a>.
+    </div>
+  </section>
+
+  <!-- Career timeline -->
+  <section id="career">
+    <div class="sec-label">Career</div>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-period">May 2022 – Present · 4+ years</div>
+        <div class="tl-role">EVP &amp; Head — Product Engineering Services</div>
+        <div class="tl-company">Cybage Software</div>
+        <div class="tl-desc">Spearheading digital product engineering services across ISVs and tech enterprises globally. Leading AI-SDLC adoption organisation-wide. Working with clients in payments, energy, cybersecurity, and SaaS to solve hard modernisation and scaling problems.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">Apr 2015 – May 2022 · 7 years</div>
+        <div class="tl-role">SVP / Sr. VP — Technology and Product Engineering</div>
+        <div class="tl-company">Cybage Software</div>
+        <div class="tl-desc">Product engineering team management, delivery excellence, and operational leadership. Built engineering competencies across HiTech and Technology service verticals. Drove software product creation using SMAC delivery model for global clients.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">Nov 2010 – Apr 2015 · 4.5 years</div>
+        <div class="tl-role">VP — Engineering, Implementation &amp; Software Delivery</div>
+        <div class="tl-company">Cybage Software</div>
+        <div class="tl-desc">Multi-technology offshore product engineering delivery. Managed complex global accounts as sole point of contact for overseas clients, coordinating distributed engineering teams across geographies.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-period">Oct 2002 – Oct 2010 · 8 years</div>
+        <div class="tl-role">Engagement Head — Technology</div>
+        <div class="tl-company">Cybage Software</div>
+        <div class="tl-desc">Engagement management across delivery, resourcing, client relationships, product development, solution delivery, and quality. Domains: Security, Manufacturing, Telecom OSS/BSS, CRM. From proposal phases to final delivery.</div>
+      </div>
+
+      <!-- Earlier companies — logos only -->
+      <div class="tl-item dim">
+        <div class="tl-role" style="font-size:.85rem; color:var(--fg3); font-weight:500; margin-block-end:10px">Earlier career — 1994 to 2002</div>
+        <div class="earlier-strip">
+          <div class="co-chip"><div class="co-icon">Cap</div>Capgemini</div>
+          <div class="co-chip"><div class="co-icon">NS</div>Neilsoft</div>
+          <div class="co-chip"><div class="co-icon">HCL</div>HCL</div>
+          <div class="co-chip"><div class="co-icon">GKW</div>GKW Limited</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Writing -->
+  <section id="writing">
+    <div class="sec-label">Writing &amp; Publications</div>
+    <div class="writing-list">
+      <div class="writing-item">
+        <div class="writing-title"><a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">GenAI is an extraordinary disruption!</a></div>
+        <div class="writing-meta">LinkedIn Article · 2024</div>
+      </div>
+      <div class="writing-item">
+        <div class="writing-title"><a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">How to decide where to focus in a rapidly changing industry landscape</a></div>
+        <div class="writing-meta">LinkedIn Article · Strategy &amp; leadership</div>
+      </div>
+      <div class="writing-item">
+        <div class="writing-title"><a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">Experience first Digital Transformation</a></div>
+        <div class="writing-meta">LinkedIn Article · Digital transformation</div>
+      </div>
+      <div class="writing-item">
+        <div class="writing-title"><a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">Digital first and Cloud Native</a></div>
+        <div class="writing-meta">LinkedIn Article · Cloud strategy</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credentials -->
+  <section id="credentials">
+    <div class="sec-label">Credentials &amp; Certifications</div>
+    <div class="cred-list">
+      <div class="cred-item">
+        <div class="cred-year">PMP, 2004</div>
+        <div>
+          <div class="cred-title">Project Management Professional</div>
+          <div class="cred-issuer">PMI — Project Management Institute</div>
+        </div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-year">Certified</div>
+        <div>
+          <div class="cred-title">Six Sigma Green Belt · Lean Six Sigma Champion</div>
+          <div class="cred-issuer">Quality &amp; process excellence</div>
+        </div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-year">Certified</div>
+        <div>
+          <div class="cred-title">Oracle Infranet 6.0 Developer (Oracle Billing)</div>
+          <div class="cred-issuer">Oracle · Telecom BSS specialisation</div>
+        </div>
+      </div>
+      <div class="cred-item">
+        <div class="cred-year">Training</div>
+        <div>
+          <div class="cred-title">Strategic Sales Training</div>
+          <div class="cred-issuer">Executive programme</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reading list — timeline style -->
+  <section id="reading">
+    <div class="sec-label">Reading list</div>
+    <div class="reading-timeline">
+
+      <div class="read-item">
+        <div class="read-category">AI &amp; Engineering</div>
+        <div class="read-title"><a href="https://www.anthropic.com/research" target="_blank" rel="noopener">Anthropic Research — Responsible AI</a></div>
+        <div class="read-source">Anthropic</div>
+        <div class="read-desc">Safety, interpretability, and frontier AI. Grounding for responsible enterprise AI adoption — not just benchmark chasing.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Engineering Performance</div>
+        <div class="read-title"><a href="https://dora.dev" target="_blank" rel="noopener">DORA State of DevOps Research</a></div>
+        <div class="read-source">DORA / Google</div>
+        <div class="read-desc">Deployment frequency, lead time, MTTR, change failure rate — the four metrics I use as baseline for delivery health in every engagement.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">AI &amp; Market</div>
+        <div class="read-title"><a href="https://a16z.com/ai/" target="_blank" rel="noopener">a16z — AI</a></div>
+        <div class="read-source">Andreessen Horowitz</div>
+        <div class="read-desc">Venture-angle read on AI market dynamics and enterprise adoption patterns. Useful for calibrating investment timing with clients.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Strategy</div>
+        <div class="read-title"><a href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights" target="_blank" rel="noopener">McKinsey Digital Insights</a></div>
+        <div class="read-source">McKinsey &amp; Company</div>
+        <div class="read-desc">Digital transformation strategy and technology-enabled growth. Useful framing for CxO-level conversations.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Engineering</div>
+        <div class="read-title"><a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">ThoughtWorks Technology Radar</a></div>
+        <div class="read-source">ThoughtWorks · bi-annual</div>
+        <div class="read-desc">The opinionated benchmark for engineering organisations — techniques, tools, platforms, languages assessed by practitioners.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Architecture</div>
+        <div class="read-title"><a href="https://sre.google/sre-book/table-of-contents/" target="_blank" rel="noopener">Google SRE Book</a></div>
+        <div class="read-source">Google</div>
+        <div class="read-desc">SLI/SLO/error-budget model. Foundational for operating product engineering organisations with operational accountability.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Technology</div>
+        <div class="read-title"><a href="https://www.technologyreview.com" target="_blank" rel="noopener">MIT Technology Review</a></div>
+        <div class="read-source">MIT</div>
+        <div class="read-desc">Rigorous, long-form AI and technology coverage. Separates signal from noise in GenAI and agentic AI trends.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Leadership</div>
+        <div class="read-title"><a href="https://hbr.org/topic/subject/technology-and-analytics" target="_blank" rel="noopener">HBR — Technology &amp; Leadership</a></div>
+        <div class="read-source">Harvard Business Review</div>
+        <div class="read-desc">Organisational behaviour and executive leadership at scale — complementary reading to the technical side of running large engineering organisations.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Architecture</div>
+        <div class="read-title"><a href="https://aws.amazon.com/architecture/well-architected/" target="_blank" rel="noopener">AWS Well-Architected Framework</a></div>
+        <div class="read-source">AWS</div>
+        <div class="read-desc">Six pillars — operational excellence, security, reliability, performance, cost, sustainability. My go-to for structured cloud architecture reviews.</div>
+      </div>
+
+      <div class="read-item">
+        <div class="read-category">Engineering Leadership</div>
+        <div class="read-title"><a href="https://martinfowler.com/architecture/" target="_blank" rel="noopener">Martin Fowler — Architecture Patterns</a></div>
+        <div class="read-source">martinfowler.com</div>
+        <div class="read-desc">Canonical reference for microservices, event-driven architecture, and refactoring patterns. Required for principal engineers on modernisation work.</div>
+      </div>
+
+    </div>
+
+    <!-- Provision for curated sharing -->
+    <div class="provision-card">
+      <p><strong style="color:var(--fg2)">Curated additions</strong> — This section is maintained as a living reading list. Suggestions are shared via <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">LinkedIn</a> and occasional posts.</p>
+      <p>To suggest a read: drop a message on LinkedIn or email with subject <code>Reading list: [title]</code></p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="sec-label">Contact</div>
+    <p class="contact-text">
+      Open to speaking engagements, advisory conversations, and strategic collaboration. If you're thinking about modernisation, engineering scale, or AI-augmented delivery — I'd welcome the conversation.
+    </p>
+    <div class="email-chip">debasisr@cybage.com</div>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">LinkedIn →</a>
+      <a href="https://www.cybage.com" target="_blank" rel="noopener">Cybage Software →</a>
+    </div>
+  </section>
+
+  <footer>Last updated: October 2026 · Debasis Ray · Pune, India</footer>
+
+</main>
+</div><!-- /shell -->
+
+<script>
+/* Theme */
+const html = document.documentElement;
+const saved = (() => { try { return localStorage.getItem('dr-theme'); } catch { return null; } })();
+if (saved) html.dataset.theme = saved;
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  html.dataset.theme = next;
+  try { localStorage.setItem('dr-theme', next); } catch {}
+});
+
+/* Active nav highlight on scroll */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => obs.observe(s));
+</script>
