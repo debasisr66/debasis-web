@@ -1,4 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Debasis Ray</title>
+<meta name="description" content="EVP &amp; Head, Product Engineering Services at Cybage Software. Technology, delivery, and strategy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Cormorant:ital,wght@0,600;1,500&display=swap">
 
@@ -200,7 +206,34 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
   font-family: 'Cormorant', Georgia, serif;
   font-size: 1.7rem; font-weight: 600; color: #fff;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
+.avatar-initials { pointer-events: none; user-select: none; }
+.avatar-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  position: absolute; inset: 0;
+}
+/* Admin mode: avatar becomes a clickable upload zone */
+body.admin-mode .avatar {
+  cursor: pointer;
+}
+body.admin-mode .avatar::after {
+  content: '↑';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.45);
+  color: #fff; font-size: 1.5rem;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+body.admin-mode .avatar:hover::after { opacity: 1; }
+
 .profile-name { font-size: 1.5rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-block-end: 3px; }
 .profile-title { font-size: .875rem; color: var(--fg2); }
 .profile-company { font-size: .82rem; color: var(--fg3); }
@@ -227,6 +260,20 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
   margin-block-end: .9rem;
 }
 .bio p:last-child { margin-block-end: 0; }
+
+/* Bio in edit mode */
+body.admin-mode #bioContent[contenteditable="true"] {
+  outline: 1.5px dashed var(--accent);
+  border-radius: 4px;
+  padding: 8px;
+  margin: -8px;
+  min-height: 80px;
+  cursor: text;
+}
+body.admin-mode #bioContent[contenteditable="true"]:focus {
+  outline: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
 
 .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-block-start: 16px; }
 .tag { font-size: 11px; color: var(--fg3); background: var(--hi); border: 1px solid var(--rule); padding: 3px 10px; border-radius: 20px; }
@@ -271,7 +318,6 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
   position: relative;
   padding-left: 28px;
 }
-/* vertical spine */
 .timeline::before {
   content: '';
   position: absolute;
@@ -288,7 +334,6 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
 }
 .tl-item:last-child { margin-block-end: 0; }
 
-/* dot */
 .tl-item::before {
   content: '';
   position: absolute;
@@ -381,11 +426,6 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
   border: 2px solid var(--bg);
   box-shadow: 0 0 0 1px var(--accent);
 }
-.read-item.placeholder-dot::before {
-  background: var(--dot-old);
-  box-shadow: 0 0 0 1px var(--dot-old);
-  border-style: dashed;
-}
 
 .read-category {
   font-size: 10px;
@@ -422,6 +462,61 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
   color: var(--fg2);
   font-family: 'SF Mono', 'Fira Code', monospace;
 }
+
+/* ─── News / Updates ─── */
+.news-feed { display: flex; flex-direction: column; }
+.news-item {
+  padding-block: 18px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.news-item:last-child { border-bottom: none; }
+.news-date {
+  font-size: .73rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--fg3); margin-block-end: 5px;
+}
+.news-title { font-size: .95rem; font-weight: 600; color: var(--fg); margin-block-end: 6px; line-height: 1.3; }
+.news-body { font-size: .875rem; color: var(--fg2); line-height: 1.65; max-width: 60ch; }
+.news-link { display: inline-block; margin-block-start: 8px; font-size: .82rem; font-weight: 500; }
+.news-admin-controls { display: none; gap: 8px; margin-block-start: 10px; }
+body.admin-mode .news-admin-controls { display: flex; }
+.news-admin-controls button {
+  font-size: .75rem; padding: 3px 10px; cursor: pointer;
+  border: 1px solid var(--rule); background: var(--hi);
+  color: var(--fg2); border-radius: 3px; font-family: inherit;
+}
+.news-admin-controls .btn-del { border-color: #cc3333; color: #cc3333; }
+.add-news-btn {
+  margin-block-start: 16px; padding: 9px 16px;
+  background: var(--hi); border: 1px dashed var(--rule);
+  color: var(--fg2); font-size: .82rem; font-family: inherit;
+  cursor: pointer; border-radius: 4px; width: 100%; text-align: left;
+}
+.add-news-btn:hover { border-color: var(--accent); color: var(--accent); }
+.news-empty { font-size: .85rem; color: var(--fg3); padding-block: 8px; }
+
+/* News inline form */
+.news-form {
+  background: var(--hi); border: 1px solid var(--rule);
+  border-radius: 5px; padding: 16px; margin-block: 12px;
+}
+.news-form label { display: block; font-size: .75rem; font-weight: 600; color: var(--fg3); margin-block-end: 4px; letter-spacing: .06em; text-transform: uppercase; }
+.news-form input, .news-form textarea {
+  display: block; width: 100%; margin-block-end: 12px;
+  font-family: inherit; font-size: .875rem; padding: 7px 10px;
+  border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--surface); color: var(--fg);
+}
+.news-form input::placeholder, .news-form textarea::placeholder { color: var(--fg3); }
+.news-form textarea { min-height: 80px; resize: vertical; }
+.news-form-actions { display: flex; gap: 8px; }
+.news-form-actions button {
+  padding: 7px 16px; font-family: inherit; cursor: pointer;
+  border-radius: 3px; font-size: .85rem;
+}
+.nf-save { background: var(--accent); color: #fff; border: none; }
+.nf-cancel { background: none; border: 1px solid var(--rule); color: var(--fg2); }
 
 /* ─── Writing ─── */
 .writing-list { display: flex; flex-direction: column; }
@@ -469,6 +564,80 @@ section { margin-block-end: clamp(48px, 7vw, 72px); }
 /* ─── Footer ─── */
 footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top: 1px solid var(--rule); }
 
+/* ─── Admin overlay ─── */
+.admin-trigger {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--rule);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; opacity: .25; transition: opacity .2s;
+  z-index: 500; color: var(--fg2); padding: 0;
+}
+.admin-trigger:hover { opacity: 1; }
+
+/* PAT modal */
+.admin-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 600;
+}
+.admin-modal-overlay[hidden] { display: none !important; }
+.admin-modal-box {
+  background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 8px; padding: 28px 32px; width: min(420px, 90vw);
+  box-shadow: 0 8px 32px rgba(0,0,0,.15);
+}
+.admin-modal-box h2 { font-size: 1rem; font-weight: 600; margin-block-end: 6px; }
+.admin-modal-box p { font-size: .845rem; color: var(--fg2); margin-block-end: 14px; line-height: 1.5; }
+.admin-modal-box input[type="password"] {
+  width: 100%; padding: 9px 12px; font-size: .875rem; font-family: monospace;
+  border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--bg); color: var(--fg); margin-block-end: 12px;
+}
+.admin-modal-actions { display: flex; gap: 8px; margin-block-end: 12px; }
+.admin-modal-actions button {
+  padding: 8px 18px; cursor: pointer; border-radius: 4px;
+  font-family: inherit; font-size: .875rem;
+}
+.pat-unlock { background: var(--accent); color: #fff; border: none; }
+.pat-unlock:disabled { opacity: .5; cursor: default; }
+.pat-cancel { background: none; border: 1px solid var(--rule); color: var(--fg2); }
+.admin-modal-hint { font-size: .78rem; color: var(--fg3); line-height: 1.5; }
+.admin-modal-hint code { font-family: monospace; background: var(--hi); padding: 1px 5px; border-radius: 3px; }
+.admin-modal-remember { font-size: .78rem; color: var(--fg3); display: flex; align-items: center; gap: 6px; margin-block-start: 10px; }
+.pat-error { font-size: .8rem; color: #cc3333; margin-block-start: 6px; min-height: 1rem; display: block; }
+
+/* Admin toolbar */
+.admin-toolbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--rule);
+  padding: 10px 20px; padding-bottom: max(10px, env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 12px;
+  z-index: 400; font-size: .875rem;
+  box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+}
+.admin-toolbar[hidden] { display: none !important; }
+.admin-toolbar-label {
+  color: var(--accent); font-size: .75rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; margin-right: auto;
+}
+.btn-publish {
+  background: var(--accent); color: #fff; border: none;
+  padding: 7px 18px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: .85rem;
+}
+.btn-publish:disabled { opacity: .5; cursor: default; }
+.btn-exit {
+  background: none; border: 1px solid var(--rule); color: var(--fg2);
+  padding: 7px 14px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: .85rem;
+}
+.pub-status { font-size: .78rem; }
+.pub-status.ok { color: #1a7a3c; }
+.pub-status.err { color: #cc3333; }
+
+/* body padding when toolbar visible */
+body.admin-mode { padding-bottom: 60px; }
+
 /* ─── Responsive ─── */
 @media (max-width: 680px) {
   body { display: block; }
@@ -489,16 +658,23 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
   .nav-group { margin-block-end: 0; margin-right: 20px; }
   .nav-group-label { display: none; }
   .nav-links { flex-direction: row; gap: 12px; }
+  .nav-links a { padding: 6px 0; }
   .sidenav-footer { margin-top: 0; padding-block-start: 0; border-top: none; border-left: 1px solid var(--rule); padding-left: 20px; display: flex; align-items: center; gap: 10px; }
   .content { padding: 20px 16px; }
   .consult-grid { grid-template-columns: 1fr; }
   .cred-item { grid-template-columns: 100px 1fr; }
+  .news-body { max-width: 100%; }
+  .admin-trigger { bottom: 72px; }
+  .admin-toolbar { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }
 }
 </style>
+</head>
+<body>
 
+<!-- ── Shell ── -->
 <div class="shell">
 
 <!-- ── Left nav ── -->
@@ -530,6 +706,7 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
     <div class="nav-group-label">Reads</div>
     <ul class="nav-links">
       <li><a href="#reading">Reading list</a></li>
+      <li><a href="#news" id="newsNavLink" style="display:none">Updates</a></li>
     </ul>
   </div>
 
@@ -547,7 +724,11 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
   <!-- Profile -->
   <section id="profile">
     <div class="profile-top">
-      <div class="avatar" aria-hidden="true">DR</div>
+      <div class="avatar" id="avatar" title="Profile photo" aria-label="Profile photo">
+        <span class="avatar-initials" aria-hidden="true">DR</span>
+        <img class="avatar-img" id="avatarImg" alt="Debasis Ray" hidden>
+        <input type="file" id="photoInput" accept="image/*" hidden aria-hidden="true" tabindex="-1">
+      </div>
       <div>
         <div class="profile-name">Debasis Ray</div>
         <div class="profile-title">EVP &amp; Head, Product Engineering Services</div>
@@ -563,21 +744,18 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
       <span class="sep">·</span>
       <span>Pune, India</span>
     </div>
-    <div class="bio">
-      <p>
-        I work with ISVs and technology companies to build, modernise, and scale software products — with engineering teams that ship outcomes, not just code. As EVP of Product Engineering Services at Cybage Software, I partner with technology-enabled enterprises across payments, energy, cybersecurity, and SaaS platforms to solve the hard problems: legacy modernisation that doesn't break what works, cloud architecture that actually reduces operational risk, and AI integration that improves engineering velocity without sacrificing quality or accountability.
-      </p>
-      <p>
-        Three decades in software engineering have taught me one thing clearly — technology alone doesn't create impact. What creates impact is the combination of strong product thinking, disciplined engineering, capable teams, and measurable execution. That's what I build.
-      </p>
-      <div class="tag-row">
-        <span class="tag">#AI</span>
-        <span class="tag">#DigitalTransformation</span>
-        <span class="tag">#AgenticAI</span>
-        <span class="tag">#AISDLC</span>
-        <span class="tag">#ResponsibleAI</span>
-        <span class="tag">#SoftwareEngineering</span>
-      </div>
+    <div class="bio" id="bioContent">
+      <!-- Populated by JS from content.json; fallback rendered below if JS fails -->
+      <p>I work with ISVs and technology companies to build, modernise, and scale software products — with engineering teams that ship outcomes, not just code. As EVP of Product Engineering Services at Cybage Software, I partner with technology-enabled enterprises across payments, energy, cybersecurity, and SaaS platforms to solve the hard problems: legacy modernisation that doesn't break what works, cloud architecture that actually reduces operational risk, and AI integration that improves engineering velocity without sacrificing quality or accountability.</p>
+      <p>Three decades in software engineering have taught me one thing clearly — technology alone doesn't create impact. What creates impact is the combination of strong product thinking, disciplined engineering, capable teams, and measurable execution. That's what I build.</p>
+    </div>
+    <div class="tag-row">
+      <span class="tag">#AI</span>
+      <span class="tag">#DigitalTransformation</span>
+      <span class="tag">#AgenticAI</span>
+      <span class="tag">#AISDLC</span>
+      <span class="tag">#ResponsibleAI</span>
+      <span class="tag">#SoftwareEngineering</span>
     </div>
   </section>
 
@@ -676,7 +854,6 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
         <div class="tl-desc">Engagement management across delivery, resourcing, client relationships, product development, solution delivery, and quality. Domains: Security, Manufacturing, Telecom OSS/BSS, CRM. From proposal phases to final delivery.</div>
       </div>
 
-      <!-- Earlier companies — logos only -->
       <div class="tl-item dim">
         <div class="tl-role" style="font-size:.85rem; color:var(--fg3); font-weight:500; margin-block-end:10px">Earlier career — 1994 to 2002</div>
         <div class="earlier-strip">
@@ -825,11 +1002,18 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
 
     </div>
 
-    <!-- Provision for curated sharing -->
     <div class="provision-card">
       <p><strong style="color:var(--fg2)">Curated additions</strong> — This section is maintained as a living reading list. Suggestions are shared via <a href="https://www.linkedin.com/in/debasisray/" target="_blank" rel="noopener">LinkedIn</a> and occasional posts.</p>
       <p>To suggest a read: drop a message on LinkedIn or email with subject <code>Reading list: [title]</code></p>
     </div>
+  </section>
+
+  <!-- News / Updates — hidden until populated -->
+  <section id="news" style="display:none">
+    <div class="sec-label">Updates</div>
+    <div class="news-feed" id="newsFeed"></div>
+    <p class="news-empty" id="newsEmpty" style="display:none">No updates yet.</p>
+    <button class="add-news-btn" id="addNewsBtn" style="display:none">+ Add update</button>
   </section>
 
   <!-- Contact -->
@@ -850,28 +1034,468 @@ footer { padding-block: 32px 0; font-size: .78rem; color: var(--fg3); border-top
 </main>
 </div><!-- /shell -->
 
-<script>
-/* Theme */
-const html = document.documentElement;
-const saved = (() => { try { return localStorage.getItem('dr-theme'); } catch { return null; } })();
-if (saved) html.dataset.theme = saved;
-document.getElementById('themeToggle').addEventListener('click', () => {
-  const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
-  html.dataset.theme = next;
-  try { localStorage.setItem('dr-theme', next); } catch {}
-});
+<!-- ── Admin: gear trigger ── -->
+<button class="admin-trigger" id="adminTrigger" title="Admin" aria-label="Open admin panel">⚙</button>
 
-/* Active nav highlight on scroll */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      const active = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
-      if (active) active.classList.add('active');
-    }
+<!-- ── Admin: PAT modal ── -->
+<div class="admin-modal-overlay" id="adminModal" hidden role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+  <div class="admin-modal-box">
+    <h2 id="adminModalTitle">Admin access</h2>
+    <p>Enter your GitHub Personal Access Token to edit this site. It is stored only in your browser and never committed.</p>
+    <input type="password" id="patInput" placeholder="github_pat_…" autocomplete="off">
+    <span class="pat-error" id="patError"></span>
+    <div class="admin-modal-actions">
+      <button class="pat-unlock" id="patUnlock">Unlock</button>
+      <button class="pat-cancel" id="patCancel">Cancel</button>
+    </div>
+    <p class="admin-modal-hint">Token needs <code>public_repo</code> scope. <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">Create one →</a></p>
+    <label class="admin-modal-remember">
+      <input type="checkbox" id="rememberPat"> Remember token in this browser
+    </label>
+  </div>
+</div>
+
+<!-- ── Admin: toolbar ── -->
+<div class="admin-toolbar" id="adminToolbar" hidden role="toolbar">
+  <span class="admin-toolbar-label">● Edit mode</span>
+  <button class="btn-publish" id="publishBtn">Save &amp; Publish</button>
+  <button class="btn-exit" id="exitBtn">Exit</button>
+  <span class="pub-status" id="pubStatus"></span>
+</div>
+
+<script>
+'use strict';
+
+/* ── Config ── */
+const REPO     = 'debasisr66/debasis-web';
+const API_FILE = `https://api.github.com/repos/${REPO}/contents/content.json`;
+
+/* ── State ── */
+const S = { content: null, pat: null, editMode: false };
+
+/* ── Boot ── */
+(function init() {
+  applyTheme();
+  loadContent().then(() => {
+    checkStoredPAT();
   });
-}, { threshold: 0.25 });
-sections.forEach(s => obs.observe(s));
+  setupIntersectionObserver();
+  setupThemeToggle();
+  setupAdmin();
+})();
+
+/* ────────────────────────────────────────────
+   Content loading
+──────────────────────────────────────────── */
+async function loadContent() {
+  try {
+    const res = await fetch('./content.json?v=' + Date.now());
+    if (!res.ok) return;
+    S.content = await res.json();
+    applyContent(S.content);
+  } catch (e) {
+    // Falls back to the hardcoded HTML in the bio div — no action needed.
+  }
+}
+
+function applyContent(data) {
+  // ── Profile photo
+  if (data.profile?.photo) {
+    const img = document.getElementById('avatarImg');
+    img.src = data.profile.photo;
+    img.hidden = false;
+    document.querySelector('.avatar-initials').hidden = true;
+  }
+
+  // ── Bio paragraphs
+  const bio = document.getElementById('bioContent');
+  const paras = data.profile?.summary;
+  if (Array.isArray(paras) && paras.length) {
+    bio.innerHTML = paras.map(p => '<p>' + esc(p) + '</p>').join('');
+  }
+
+  // ── News section
+  const news = data.news || [];
+  const newsSection = document.getElementById('news');
+  const newsNavLink = document.getElementById('newsNavLink');
+  if (news.length > 0) {
+    newsSection.style.display = '';
+    newsNavLink.style.display = '';
+    renderNews(news);
+  }
+}
+
+/* ────────────────────────────────────────────
+   Admin — PAT modal
+──────────────────────────────────────────── */
+function setupAdmin() {
+  const trigger = document.getElementById('adminTrigger');
+  const modal   = document.getElementById('adminModal');
+  const cancel  = document.getElementById('patCancel');
+  const unlock  = document.getElementById('patUnlock');
+  const input   = document.getElementById('patInput');
+  const errEl   = document.getElementById('patError');
+  const remember = document.getElementById('rememberPat');
+
+  trigger.addEventListener('click', () => {
+    // Pre-fill stored PAT if present
+    const stored = lsGet('dr-admin-pat');
+    if (stored) { input.value = stored; remember.checked = true; }
+    errEl.textContent = '';
+    modal.hidden = false;
+    input.focus();
+  });
+
+  cancel.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+  unlock.addEventListener('click', async () => {
+    const pat = input.value.trim();
+    if (!pat) { errEl.textContent = 'Enter your token.'; return; }
+    unlock.disabled = true;
+    unlock.textContent = 'Verifying…';
+    errEl.textContent = '';
+    const ok = await validatePAT(pat);
+    unlock.disabled = false;
+    unlock.textContent = 'Unlock';
+    if (!ok) { errEl.textContent = 'Token invalid or missing public_repo scope.'; return; }
+    S.pat = pat;
+    if (remember.checked) lsSet('dr-admin-pat', pat);
+    else lsDel('dr-admin-pat');
+    closeModal();
+    enterEditMode();
+  });
+
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') unlock.click(); });
+
+  // Toolbar exit & publish
+  document.getElementById('exitBtn').addEventListener('click', exitEditMode);
+  document.getElementById('publishBtn').addEventListener('click', publishContent);
+  // Photo upload
+  document.getElementById('addNewsBtn').addEventListener('click', showNewsForm);
+  document.getElementById('photoInput').addEventListener('change', handlePhotoInput);
+  document.getElementById('avatar').addEventListener('click', handleAvatarClick);
+}
+
+function closeModal() {
+  document.getElementById('adminModal').hidden = true;
+}
+
+async function validatePAT(pat) {
+  try {
+    const r = await fetch('https://api.github.com/user', {
+      headers: { Authorization: 'token ' + pat, Accept: 'application/vnd.github.v3+json' }
+    });
+    return r.ok;
+  } catch { return false; }
+}
+
+/* Silently validate stored PAT on load — just readies the gear icon */
+async function checkStoredPAT() {
+  const stored = lsGet('dr-admin-pat');
+  if (!stored) return;
+  const ok = await validatePAT(stored);
+  if (!ok) lsDel('dr-admin-pat');
+}
+
+/* ────────────────────────────────────────────
+   Edit mode — enter / exit
+──────────────────────────────────────────── */
+function enterEditMode() {
+  S.editMode = true;
+  document.body.classList.add('admin-mode');
+
+  // Make bio contenteditable
+  const bio = document.getElementById('bioContent');
+  bio.contentEditable = 'true';
+
+  // Show toolbar & news controls
+  document.getElementById('adminToolbar').hidden = false;
+  document.getElementById('addNewsBtn').style.display = '';
+
+  // Show news section even if empty
+  const newsSection = document.getElementById('news');
+  newsSection.style.display = '';
+  document.getElementById('newsNavLink').style.display = '';
+
+  // Show empty state if no items
+  if (!S.content?.news?.length) {
+    document.getElementById('newsEmpty').style.display = '';
+  }
+
+  // Re-render news to show delete buttons
+  if (S.content?.news?.length) renderNews(S.content.news);
+}
+
+function exitEditMode() {
+  S.editMode = false;
+  S.pat = null;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('bioContent').contentEditable = 'false';
+  document.getElementById('adminToolbar').hidden = true;
+  document.getElementById('addNewsBtn').style.display = 'none';
+  document.getElementById('newsEmpty').style.display = 'none';
+  document.getElementById('pubStatus').textContent = '';
+  // Reload to restore canonical state
+  loadContent();
+}
+
+/* ────────────────────────────────────────────
+   Photo upload
+──────────────────────────────────────────── */
+function handleAvatarClick() {
+  if (!S.editMode) return;
+  document.getElementById('photoInput').click();
+}
+
+async function handlePhotoInput(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const dataUri = await compressPhoto(file);
+  // Immediate preview
+  const img = document.getElementById('avatarImg');
+  img.src = dataUri;
+  img.hidden = false;
+  document.querySelector('.avatar-initials').hidden = true;
+  // Persist in state (committed on Publish)
+  if (!S.content) S.content = { profile: { photo: '', summary: [] }, news: [] };
+  S.content.profile.photo = dataUri;
+  e.target.value = '';
+}
+
+function compressPhoto(file, maxBytes = 180000) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 400;
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          const r = Math.min(maxDim / w, maxDim / h);
+          w = Math.round(w * r); h = Math.round(h * r);
+        }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        let q = 0.88, uri;
+        do { uri = canvas.toDataURL('image/jpeg', q); q -= 0.1; }
+        while (uri.length > maxBytes * 1.37 && q > 0.2);
+        resolve(uri);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ────────────────────────────────────────────
+   News management
+──────────────────────────────────────────── */
+function renderNews(items) {
+  if (!S.content) return;
+  const feed = document.getElementById('newsFeed');
+  const sorted = [...items].sort((a, b) => String(b.id).localeCompare(String(a.id)));
+  feed.innerHTML = sorted.map(item => `
+    <div class="news-item" data-id="${esc(item.id)}">
+      <div class="news-date">${fmtDate(item.date)}</div>
+      <div class="news-title">${esc(item.title)}</div>
+      <div class="news-body">${esc(item.body)}</div>
+      ${item.link ? `<a class="news-link" href="${esc(item.link)}" target="_blank" rel="noopener">Read more →</a>` : ''}
+      <div class="news-admin-controls">
+        <button class="btn-del" onclick="deleteNewsItem('${esc(item.id)}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showNewsForm() {
+  // Toggle: if form already open, close it
+  const existing = document.getElementById('newsFormEl');
+  if (existing) { existing.remove(); return; }
+
+  const form = document.createElement('div');
+  form.id = 'newsFormEl';
+  form.className = 'news-form';
+  form.innerHTML = `
+    <label>Title</label>
+    <input type="text" id="nfTitle" placeholder="Brief headline" maxlength="200">
+    <label>Body</label>
+    <textarea id="nfBody" placeholder="2-3 sentences…" rows="4"></textarea>
+    <label>Link (optional)</label>
+    <input type="url" id="nfLink" placeholder="https://…">
+    <div class="news-form-actions">
+      <button class="nf-save" id="nfSave">Add update</button>
+      <button class="nf-cancel" id="nfCancelBtn">Cancel</button>
+    </div>
+  `;
+  document.getElementById('addNewsBtn').after(form);
+  document.getElementById('nfTitle').focus();
+  document.getElementById('nfCancelBtn').addEventListener('click', () => form.remove());
+  document.getElementById('nfSave').addEventListener('click', saveNewsItem);
+}
+
+function saveNewsItem() {
+  const title = document.getElementById('nfTitle').value.trim();
+  const body  = document.getElementById('nfBody').value.trim();
+  const link  = document.getElementById('nfLink').value.trim();
+  if (!title || !body) { alert('Title and body are required.'); return; }
+
+  if (!S.content) S.content = { profile: { photo: '', summary: [] }, news: [] };
+  if (!S.content.news) S.content.news = [];
+
+  const item = {
+    id: String(Date.now()),
+    date: new Date().toISOString().slice(0, 10),
+    title, body, link
+  };
+  S.content.news.unshift(item);
+
+  const newsSection = document.getElementById('news');
+  newsSection.style.display = '';
+  document.getElementById('newsEmpty').style.display = 'none';
+  renderNews(S.content.news);
+  document.getElementById('newsFormEl')?.remove();
+}
+
+function deleteNewsItem(id) {
+  if (!confirm('Delete this update?')) return;
+  if (!S.content?.news) return;
+  S.content.news = S.content.news.filter(n => String(n.id) !== String(id));
+  renderNews(S.content.news);
+  if (!S.content.news.length) {
+    document.getElementById('newsFeed').innerHTML = '';
+    document.getElementById('newsEmpty').style.display = S.editMode ? '' : 'none';
+  }
+}
+
+function fmtDate(str) {
+  try {
+    return new Date(str + 'T00:00:00').toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+  } catch { return str; }
+}
+
+/* ────────────────────────────────────────────
+   Publish (GitHub API PUT)
+──────────────────────────────────────────── */
+async function publishContent() {
+  const btn    = document.getElementById('publishBtn');
+  const status = document.getElementById('pubStatus');
+  btn.disabled = true;
+  btn.textContent = 'Publishing…';
+  status.textContent = '';
+  status.className = 'pub-status';
+
+  try {
+    // Collect live bio from contenteditable
+    const bioEl = document.getElementById('bioContent');
+    const paragraphs = (bioEl.innerText || '')
+      .split(/\n{2,}/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    if (!S.content) S.content = { profile: { photo: '', summary: [] }, news: [] };
+    S.content.profile.summary = paragraphs;
+
+    // Fetch current SHA
+    const metaRes = await fetch(API_FILE, {
+      headers: { Authorization: 'token ' + S.pat, Accept: 'application/vnd.github.v3+json' }
+    });
+
+    let sha = null;
+    if (metaRes.ok) {
+      const meta = await metaRes.json();
+      sha = meta.sha;
+    }
+
+    const jsonStr = JSON.stringify(S.content, null, 2);
+    const payload = {
+      message: 'Update site content — ' + new Date().toISOString().slice(0, 10),
+      content: toBase64(jsonStr)
+    };
+    if (sha) payload.sha = sha;
+
+    const putRes = await fetch(API_FILE, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'token ' + S.pat,
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || ('HTTP ' + putRes.status));
+    }
+
+    status.textContent = 'Published! Site updates in ~60 s.';
+    status.className = 'pub-status ok';
+  } catch (e) {
+    status.textContent = 'Error: ' + e.message;
+    status.className = 'pub-status err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+  }
+}
+
+function toBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+/* ────────────────────────────────────────────
+   Theme
+──────────────────────────────────────────── */
+function applyTheme() {
+  const saved = lsGet('dr-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+}
+
+function setupThemeToggle() {
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    lsSet('dr-theme', next);
+  });
+}
+
+/* ────────────────────────────────────────────
+   Scroll-based active nav highlight
+──────────────────────────────────────────── */
+function setupIntersectionObserver() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(s => obs.observe(s));
+}
+
+/* ────────────────────────────────────────────
+   Helpers
+──────────────────────────────────────────── */
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function lsGet(k)    { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch {} }
+function lsDel(k)    { try { localStorage.removeItem(k); } catch {} }
 </script>
+
+</body>
+</html>
